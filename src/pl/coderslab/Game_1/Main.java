@@ -27,7 +27,7 @@ public class Main {
         int counter = 0;
         Scanner scan = new Scanner(System.in);
         while (true) {
-            System.out.println("Gues number");
+            System.out.println("Guess number");
             while (!scan.hasNextInt()) {
                 scan.next();
                 System.out.println("This is not a number");
