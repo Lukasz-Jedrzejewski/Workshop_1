@@ -13,16 +13,18 @@ public class Main {
         System.out.println("Type six numbers from 1 to 49");
         int yourTypyingNumber = 0;
         Scanner scan = new Scanner(System.in);
-        while (true) {
             for (int i = 0; i < typyingNumbers.length; i++) {
                 System.out.print("Your number: ");
+//                while (!scan.hasNextInt()) {
+//                    scan.next();
+//                    System.out.println("This is not a number");
+//                }
                 yourTypyingNumber = scan.nextInt();
                 typyingNumbers[i] = yourTypyingNumber;
             }
+            Arrays.sort(typyingNumbers);
             System.out.println(Arrays.toString(typyingNumbers));
             return typyingNumbers;
-        }
-
     }
 
 }
