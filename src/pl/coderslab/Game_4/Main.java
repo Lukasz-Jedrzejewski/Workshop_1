@@ -7,46 +7,70 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-
+        while (true) {
+            System.out.println(diceRolling(userInput()));
+        }
 
     }
-
-
-    private static void userInput() {
+    private static int[] userInput() {
         Scanner in = new Scanner(System.in);
-        String abc;
-        String[] arr = {"", "", "", "", ""};
-        int licznik = 0;
+        String input;
+        String[] inputData = {"", "", "", "", ""};
+        int counter = 0;
+        int[] resultData = {1, 0, 0};
         System.out.println("Enter code");
-        abc = in.nextLine();
-        if (abc.matches("\\d+[D,d]\\d+[+,-]\\d+") || abc.matches("[D,d]\\d+[+,-]\\d+")
-                || abc.matches("[D,d]\\d+") || abc.matches("\\d+[D,d]\\d+")) {
-            for (int i = 0; i < abc.length(); i++) {
-                while (Character.isDigit(abc.charAt(i))) {
-                    arr[licznik] += abc.charAt(i);
-                    if (i == abc.length() - 1)
+        input = in.nextLine();
+        if (input.matches("\\d+[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+")
+                || input.matches("[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+")
+                || input.matches("[D,d](3|4|6|8|10|12|20|100)")
+                || input.matches("\\d+[D,d](3|4|6|8|10|12|20|100)")) {
+            for (int i = 0; i < input.length(); i++) {
+                while (Character.isDigit(input.charAt(i))) {
+                    inputData[counter] += input.charAt(i);
+                    if (i == input.length() - 1)
                         break;
                     i++;
-                    System.out.println(Arrays.toString(arr));
                 }
-                licznik++;
-                if (abc.charAt(i) == 'D' || abc.charAt(i) == 'd') {
-                    arr[licznik] += abc.charAt(i);
-                    System.out.println(Arrays.toString(arr));
-                    licznik++;
-                } else if (abc.charAt(i) == '+' || abc.charAt(i) == '-') {
-                    arr[licznik] += abc.charAt(i);
-                    System.out.println(Arrays.toString(arr));
-                    licznik++;
+                counter++;
+                if (input.charAt(i) == 'D' || input.charAt(i) == 'd') {
+                    inputData[counter] += input.charAt(i);
+                    counter++;
+                } else if (input.charAt(i) == '+' || input.charAt(i) == '-') {
+                    inputData[counter] += input.charAt(i);
+                    counter++;
                 }
             }
-            System.out.println(Arrays.toString(arr));
+            if(!inputData[0].isEmpty())
+                resultData[0] = Integer.parseInt(inputData[0]);
+            resultData[1] = Integer.parseInt(inputData[2]);
+            if(!inputData[4].isEmpty()){
+                if(inputData[3].equals("-"))
+                    resultData[2] = -Integer.parseInt(inputData[4]);
+                else
+                    resultData[2] = Integer.parseInt(inputData[4]);
+            }
         } else {
-            System.out.println("Wrong format");
-            userInput();
+                System.out.println("Wrong format");
+                userInput();
         }
+        System.out.println(Arrays.toString(resultData));
+        System.out.println("ok");
+        return resultData;
     }
 
-
-
+    private static int diceRolling(int[] var) {
+        int throwsNumber = var[0];
+        int diceType = var[1];
+        int modifer = var[2];
+        int throwsResult = 0;
+        Random random = new Random();
+        for (int i = 0; i < throwsNumber ; i++) {
+            throwsResult += random.nextInt(diceType)+1;
+        }
+        if(modifer < 0 && throwsResult+modifer <= 0){
+            System.out.println("Negative modifier too large");
+            userInput();
+        }
+        return throwsResult+modifer;
+    }
 }
