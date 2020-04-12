@@ -8,18 +8,15 @@ public class Main {
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println(diceRolling(userInput()));
+            System.out.println(diceRolling(checkingInput(userInput())));
         }
 
     }
-    private static int[] userInput() {
-        Scanner in = new Scanner(System.in);
-        String input;
+    private static int[] checkingInput(String input) {
+
         String[] inputData = {"", "", "", "", ""};
         int counter = 0;
         int[] resultData = {1, 0, 0};
-        System.out.println("Enter code");
-        input = in.nextLine();
         if (input.matches("\\d+[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+")
                 || input.matches("[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+")
                 || input.matches("[D,d](3|4|6|8|10|12|20|100)")
@@ -56,6 +53,13 @@ public class Main {
         System.out.println(Arrays.toString(resultData));
         System.out.println("ok");
         return resultData;
+    }
+    static String userInput(){
+        Scanner in = new Scanner(System.in);
+        String input;
+        System.out.println("Enter code");
+        input = in.nextLine();
+        return input;
     }
 
     private static int diceRolling(int[] var) {
