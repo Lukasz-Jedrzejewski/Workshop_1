@@ -1,80 +1,73 @@
 package pl.coderslab.Game_4;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
+        System.out.println("This is exemplary code: \n2D3+2 \nwhere first number in row is number of throws " +
+                "\nD+number is a symbol to define dice type \noperator and last number defines modifer");
+        System.out.println();
         while (true) {
-            System.out.println(diceRolling(checkingInput(userInput())));
+            System.out.println(diceRolling(userInput()));
         }
 
     }
-    private static int[] checkingInput(String input) {
-
-        String[] inputData = {"", "", "", "", ""};
-        int counter = 0;
-        int[] resultData = {1, 0, 0};
-        if (input.matches("\\d+[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+")
-                || input.matches("[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+")
-                || input.matches("[D,d](3|4|6|8|10|12|20|100)")
-                || input.matches("\\d+[D,d](3|4|6|8|10|12|20|100)")) {
-            for (int i = 0; i < input.length(); i++) {
-                while (Character.isDigit(input.charAt(i))) {
-                    inputData[counter] += input.charAt(i);
-                    if (i == input.length() - 1)
-                        break;
-                    i++;
-                }
-                counter++;
-                if (input.charAt(i) == 'D' || input.charAt(i) == 'd') {
-                    inputData[counter] += input.charAt(i);
-                    counter++;
-                } else if (input.charAt(i) == '+' || input.charAt(i) == '-') {
-                    inputData[counter] += input.charAt(i);
-                    counter++;
-                }
-            }
-            if(!inputData[0].isEmpty())
-                resultData[0] = Integer.parseInt(inputData[0]);
-            resultData[1] = Integer.parseInt(inputData[2]);
-            if(!inputData[4].isEmpty()){
-                if(inputData[3].equals("-"))
-                    resultData[2] = -Integer.parseInt(inputData[4]);
-                else
-                    resultData[2] = Integer.parseInt(inputData[4]);
-            }
-        } else {
-                System.out.println("Wrong format");
-                userInput();
-        }
-        System.out.println(Arrays.toString(resultData));
-        System.out.println("ok");
-        return resultData;
-    }
-    static String userInput(){
+    static int[] userInput() {
         Scanner in = new Scanner(System.in);
         String input;
+        String[] arr = {"", "", "", "", ""};
+        int counter = 0;
+        int[] var = {1, 0, 0};
         System.out.println("Enter code");
         input = in.nextLine();
-        return input;
+        while (!input.matches("\\d+[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+") &&
+                !input.matches("[D,d](3|4|6|8|10|12|20|100)[+,-]\\d+") &&
+                !input.matches("[D,d](3|4|6|8|10|12|20|100)") &&
+                !input.matches("\\d+[D,d](3|4|6|8|10|12|20|100)")) {
+            System.out.println("Wrong format");
+            System.out.println("Enter code");
+            input = in.nextLine();
+        }
+        for (int i = 0; i < input.length(); i++) {
+            while (Character.isDigit(input.charAt(i))) {
+                arr[counter] += input.charAt(i);
+                if (i == input.length() - 1)
+                    break;
+                i++;
+            }
+            counter++;
+            if (input.charAt(i) == 'D' || input.charAt(i) == 'd') {
+                arr[counter] += input.charAt(i);
+                counter++;
+            } else if (input.charAt(i) == '+' || input.charAt(i) == '-') {
+                arr[counter] += input.charAt(i);
+                counter++;
+            }
+        }
+        if (!arr[0].isEmpty())
+            var[0] = Integer.parseInt(arr[0]);
+        var[1] = Integer.parseInt(arr[2]);
+        if (!arr[4].isEmpty()) {
+            if (arr[3].equals("-"))
+                var[2] = -Integer.parseInt(arr[4]);
+            else
+                var[2] = Integer.parseInt(arr[4]);
+        }
+        return var;
     }
 
-    private static int diceRolling(int[] var) {
-        int throwsNumber = var[0];
-        int diceType = var[1];
-        int modifer = var[2];
-        int throwsResult = 0;
+    static int diceRolling(int[] var) {
+        int x = var[0];
+        int y = var[1];
+        int z = var[2];
+        int resultR = 0;
         Random random = new Random();
-        for (int i = 0; i < throwsNumber ; i++) {
-            throwsResult += random.nextInt(diceType)+1;
+        for (int i = 0; i < x; i++) {
+            resultR += random.nextInt(y) + 1;
         }
-        if(modifer < 0 && throwsResult+modifer <= 0){
-            System.out.println("Negative modifier too large");
-            userInput();
-        }
-        return throwsResult+modifer;
+        System.out.print("Final score: ");
+        return resultR + z;
     }
 }
