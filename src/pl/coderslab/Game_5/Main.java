@@ -45,6 +45,12 @@ public class Main {
                 withoutSmallthan3.add(splited.get(i));
         }
         System.out.println(withoutSmallthan3);
+
+        List<String> excluded = List.of("oraz", "tudzież", "albo","bądź","aczkolwiek","jednak","lecz","natomiast",
+                "czyli","mianowicie","ponieważ","jest","dlatego","więc","zatem","toteż","bowiem","choć","jeżeli",
+                "raczej");
+        withoutSmallthan3.removeAll(excluded);
+
         Path path = Paths.get("/home/lukasz/Pulpit/javaCD/Workshop_1/src/pl/coderslab/Game_5/popularWords.txt");
         try {
             PrintWriter printWriter = new PrintWriter("writeFile.txt");
