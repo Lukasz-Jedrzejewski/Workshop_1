@@ -1,6 +1,5 @@
 package pl.coderslab.Game_5;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,7 +9,6 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,17 +17,17 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
+        // Wywołanie pobierania
         Connection connect = Jsoup.connect("https://www.Onet.pl/");
         List<String> titles = new ArrayList<>();
         List<String> splited = new ArrayList<>();
-
         try {
             Document doc = connect.get();
             Elements links = doc.select("span.title");
             for (Element elem : links) {
                 titles.add(elem.text());
-
             }
+            // Eliminacja zbędnych znaków/dzielenie na pojedyncze słowa
             for (String line : titles) {
                 List<String> sl = Arrays.asList(line.split("\\p{Punct}+|\\s+|\\s+|\\d+"));
                 splited.addAll(sl);
@@ -37,37 +35,51 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(titles);
-        System.out.println(splited);
-        List<String> withoutSmallthan3 = new ArrayList<>();
+
+        //usuwanie słów krótszych niż 3 znaki
+        List<String> withoutWordsShorterThanThreeCharacters = new ArrayList<>();
         for (int i = 0; i < splited.size(); i++) {
             if (splited.get(i).length() > 3)
-                withoutSmallthan3.add(splited.get(i));
+                withoutWordsShorterThanThreeCharacters.add(splited.get(i));
         }
-        System.out.println(withoutSmallthan3);
 
-        List<String> excluded = List.of("oraz", "tudzież", "albo","bądź","aczkolwiek","jednak","lecz","natomiast",
-                "czyli","mianowicie","ponieważ","jest","dlatego","więc","zatem","toteż","bowiem","choć","jeżeli",
-                "raczej");
-        withoutSmallthan3.removeAll(excluded);
-
-        Path path = Paths.get("/home/lukasz/Pulpit/javaCD/Workshop_1/src/pl/coderslab/Game_5/popularWords.txt");
+        //zapis do pliku
+        Path path = Paths.get("/home/lukasz/Pulpit/javaCD/Workshop_1/src/pl/coderslab/Game_5/popular_words.txt");
         try {
-            PrintWriter printWriter = new PrintWriter("writeFile.txt");
-            printWriter.println("first line");
-            try {
-                Files.write(path, withoutSmallthan3);
-            } catch (ConcurrentModificationException e) {
-                e.getMessage();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            printWriter.close();
-        } catch (FileNotFoundException ex) {
-            System.out.println("Błąd zapisu do pliku.");
+            Files.write(path, withoutWordsShorterThanThreeCharacters);
+        } catch (ConcurrentModificationException e) {
+            e.getMessage();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        File file = new File("/home/lukasz/Pulpit/javaCD/Workshop_1/src/pl/coderslab/Game_5/popularWords.txt");
+        //przepisanie pliku popular_words do listy
+        List<String> finalList = new ArrayList<>();
+        try {
+            finalList = Files.readAllLines(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        //dodanie listy słów wykluczonych
+        List<String> excluded = List.of("oraz", "tudzież", "albo", "bądź", "aczkolwiek", "jednak", "lecz", "natomiast",
+                "czyli", "mianowicie", "ponieważ", "jest", "dlatego", "więc", "zatem", "toteż", "bowiem", "choć", "jeżeli",
+                "raczej");
+        //usunięcie słów wykluczonych z finalnej listy
+        finalList.removeAll(excluded);
+
+        Path finalPath = Paths.get("/home/lukasz/Pulpit/javaCD/Workshop_1/" +
+                "src/pl/coderslab/Game_5/filtered_popular_words.txt");
+        try {
+            Files.write(finalPath, finalList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //odczyt pliku
+        File file = new File("/home/lukasz/Pulpit/javaCD/Workshop_1/src/pl/coderslab/Game_5/" +
+                "filtered_popular_words.txt");
         StringBuilder reading = new StringBuilder();
         try {
             Scanner scan = new Scanner(file);
@@ -75,16 +87,8 @@ public class Main {
                 reading.append(scan.nextLine() + "\n");
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Brak pliku.");
+            System.out.println("No file to read");
         }
         System.out.println(reading.toString());
-
-
-
     }
-
-
-
-
-
 }
